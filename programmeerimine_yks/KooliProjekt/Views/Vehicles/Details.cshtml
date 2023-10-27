@@ -1,0 +1,66 @@
+﻿@model Vehicle
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Vehicle</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Make)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Make)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Model)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Model)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LicencePlateNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LicencePlateNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OdometerRead)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OdometerRead)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PricePerHour)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PricePerHour)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Deposit)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Deposit)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OverduePricePerHour)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OverduePricePerHour)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Booked)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Booked)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
