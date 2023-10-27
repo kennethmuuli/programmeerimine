@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Booking>
+﻿@model PagedResult<Booking>
 
 @{
     ViewData["Title"] = "Index";
@@ -12,7 +12,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            @* <th>
                 @Html.DisplayNameFor(model => model.CurrentTime)
             </th>
             <th>
@@ -20,12 +20,14 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ReturnTime)
+            </th> *@
+            <th>
+                Title
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Results) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.CurrentTime)
@@ -45,3 +47,4 @@
 }
     </tbody>
 </table>
+<vc:pager result="@Model" view-name="Default" />

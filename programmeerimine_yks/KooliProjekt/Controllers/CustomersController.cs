@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
 using KooliProjekt.Models;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace KooliProjekt.Controllers
 {
@@ -20,11 +21,11 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-              return _context.Customers != null ? 
-                          View(await _context.Customers.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Customers'  is null.");
+            var result = await _context.Customers.GetPagedAsync(page, 3);
+
+            return View(result);
         }
 
         // GET: Customers/Details/5

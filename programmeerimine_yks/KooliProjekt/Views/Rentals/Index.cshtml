@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Rental>
+﻿@model PagedResult<Rental>
 
 @{
     ViewData["Title"] = "Index";
@@ -12,7 +12,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            @* <th>
                 @Html.DisplayNameFor(model => model.PickUpTime)
             </th>
             <th>
@@ -29,12 +29,14 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.VehicleDamaged)
+            </th> *@
+            <th>
+                Title
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Results) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.PickUpTime)
@@ -63,3 +65,4 @@
 }
     </tbody>
 </table>
+<vc:pager result="@Model" view-name="Default" />

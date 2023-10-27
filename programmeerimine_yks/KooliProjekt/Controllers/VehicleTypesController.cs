@@ -20,11 +20,12 @@ namespace KooliProjekt.Controllers
         }
 
         // GET: VehicleTypes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-              return _context.VehicleTypes != null ? 
-                          View(await _context.VehicleTypes.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.VehicleTypes'  is null.");
+
+            var result = await _context.VehicleTypes.GetPagedAsync(page, 3);
+
+            return View(result);
         }
 
         // GET: VehicleTypes/Details/5
