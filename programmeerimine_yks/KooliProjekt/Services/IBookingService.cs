@@ -9,5 +9,6 @@ namespace KooliProjekt.Services
         Task<Booking> GetById(int id);
         Task Save(Booking booking);
         Task Delete(int id);
+        bool BookingExists (int id);
     }
 }

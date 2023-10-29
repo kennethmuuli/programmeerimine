@@ -15,7 +15,7 @@ namespace KooliProjekt.Controllers
     {
         private readonly IVehicleTypeService _vehicleTypeService;
 
-        public VehicleTypesController(ApplicationDbContext context, IVehicleTypeService vehicleTypeService)
+        public VehicleTypesController(IVehicleTypeService vehicleTypeService)
         {
             _vehicleTypeService = vehicleTypeService;
         }

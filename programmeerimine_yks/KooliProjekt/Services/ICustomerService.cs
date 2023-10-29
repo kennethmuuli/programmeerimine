@@ -9,5 +9,6 @@ namespace KooliProjekt.Services
         Task<Customer> GetById(int id);
         Task Save(Customer Customer);
         Task Delete(int id);
+        bool CustomerExists(int id);
     }
 }

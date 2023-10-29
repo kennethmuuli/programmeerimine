@@ -8,22 +8,23 @@ using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
 using KooliProjekt.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using KooliProjekt.Services;
 
 namespace KooliProjekt.Controllers
 {
     public class RentalsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRentalService _rentalService;
 
-        public RentalsController(ApplicationDbContext context)
+        public RentalsController(IRentalService rentalService)
         {
-            _context = context;
+            _rentalService = rentalService;
         }
 
         // GET: Rentals
         public async Task<IActionResult> Index(int page = 1)
         {
-            var result = await _context.Rental.GetPagedAsync(page, 3);
+            var result = await _rentalService.List(page, 3);
 
             return View(result);
         }
@@ -31,13 +32,13 @@ namespace KooliProjekt.Controllers
         // GET: Rentals/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Rental == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var rental = await _context.Rental
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var rental = await _rentalService.GetById(id.Value);
+
             if (rental == null)
             {
                 return NotFound();
@@ -59,24 +60,23 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,PickUpTime,ReturnTime,HadBooking,OverdueTime,ReturnedLate,VehicleDamaged")] Rental rental)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(rental);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(rental);
             }
-            return View(rental);
+            await _rentalService.Save(rental);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Rentals/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Rental == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var rental = await _context.Rental.FindAsync(id);
+            var rental = await _rentalService.GetById(id.Value);
             if (rental == null)
             {
                 return NotFound();
@@ -96,39 +96,23 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(rental);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RentalExists(rental.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(rental);
             }
-            return View(rental);
+            await _rentalService.Save(rental);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Rentals/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Rental == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var rental = await _context.Rental
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var rental = await _rentalService.GetById(id.Value);
             if (rental == null)
             {
                 return NotFound();
@@ -142,23 +126,13 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Rental == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Rental'  is null.");
-            }
-            var rental = await _context.Rental.FindAsync(id);
-            if (rental != null)
-            {
-                _context.Rental.Remove(rental);
-            }
-            
-            await _context.SaveChangesAsync();
+            await _rentalService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool RentalExists(int id)
         {
-          return (_context.Rental?.Any(e => e.Id == id)).GetValueOrDefault();
+          return _rentalService.RentalExists(id);
         }
     }
 }

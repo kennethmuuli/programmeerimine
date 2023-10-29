@@ -9,5 +9,6 @@ namespace KooliProjekt.Services
         Task<Invoice> GetById(int id);
         Task Save(Invoice Invoice);
         Task Delete(int id);
+        bool InvoiceExists(int id);
     }
 }

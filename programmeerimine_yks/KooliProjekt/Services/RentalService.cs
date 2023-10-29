@@ -51,5 +51,10 @@ namespace KooliProjekt.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public bool RentalExists(int id)
+        {
+            return (_context.Rental?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
     }
 }

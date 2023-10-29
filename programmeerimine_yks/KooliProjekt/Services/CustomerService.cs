@@ -51,5 +51,10 @@ namespace KooliProjekt.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public bool CustomerExists(int id)
+        {
+            return (_context.Customers?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
     }
 }

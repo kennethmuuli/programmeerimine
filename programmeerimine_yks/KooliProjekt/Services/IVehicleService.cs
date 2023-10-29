@@ -9,5 +9,6 @@ namespace KooliProjekt.Services
         Task<Vehicle> GetById(int id);
         Task Save(Vehicle Vehicle);
         Task Delete(int id);
+        bool VehicleExists(int id);
     }
 }

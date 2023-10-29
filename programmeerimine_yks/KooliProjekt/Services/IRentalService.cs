@@ -9,5 +9,6 @@ namespace KooliProjekt.Services
         Task<Rental> GetById(int id);
         Task Save(Rental Rental);
         Task Delete(int id);
+        bool RentalExists(int id);
     }
 }

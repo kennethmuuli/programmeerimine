@@ -51,5 +51,9 @@ namespace KooliProjekt.Services
 
             await _context.SaveChangesAsync();
         }
+        public bool BookingExists(int id)
+        {
+            return (_context.Bookings?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
     }
 }
