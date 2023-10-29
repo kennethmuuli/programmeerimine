@@ -51,5 +51,10 @@ namespace KooliProjekt.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public bool VehicleTypeExists (int id)
+        {
+            return (_context.VehicleTypes?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
     }
 }

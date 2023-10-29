@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KooliProjekt.Services
 {
-    public class BookingService
+    public class BookingService : IBookingService
     {
         private readonly ApplicationDbContext _context;
 

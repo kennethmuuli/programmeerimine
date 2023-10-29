@@ -7,23 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using KooliProjekt.Data;
 using KooliProjekt.Models;
+using KooliProjekt.Services;
 
 namespace KooliProjekt.Controllers
 {
     public class VehicleTypesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IVehicleTypeService _vehicleTypeService;
 
-        public VehicleTypesController(ApplicationDbContext context)
+        public VehicleTypesController(ApplicationDbContext context, IVehicleTypeService vehicleTypeService)
         {
-            _context = context;
+            _vehicleTypeService = vehicleTypeService;
         }
 
         // GET: VehicleTypes
         public async Task<IActionResult> Index(int page = 1)
         {
 
-            var result = await _context.VehicleTypes.GetPagedAsync(page, 3);
+            var result = await _vehicleTypeService.List(page, 3);
 
             return View(result);
         }
@@ -31,13 +32,12 @@ namespace KooliProjekt.Controllers
         // GET: VehicleTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.VehicleTypes == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var vehicleType = await _context.VehicleTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var vehicleType = await _vehicleTypeService.GetById(id.Value);
             if (vehicleType == null)
             {
                 return NotFound();
@@ -59,24 +59,23 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Type")] VehicleType vehicleType)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(vehicleType);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(vehicleType);    
             }
-            return View(vehicleType);
+            await _vehicleTypeService.Save(vehicleType);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: VehicleTypes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.VehicleTypes == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var vehicleType = await _context.VehicleTypes.FindAsync(id);
+            var vehicleType = await _vehicleTypeService.GetById(id.Value);
             if (vehicleType == null)
             {
                 return NotFound();
@@ -96,39 +95,23 @@ namespace KooliProjekt.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(vehicleType);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VehicleTypeExists(vehicleType.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(vehicleType);
             }
-            return View(vehicleType);
+            _vehicleTypeService.Save(vehicleType);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: VehicleTypes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.VehicleTypes == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var vehicleType = await _context.VehicleTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var vehicleType = await _vehicleTypeService.GetById(id.Value);
             if (vehicleType == null)
             {
                 return NotFound();
@@ -142,23 +125,20 @@ namespace KooliProjekt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.VehicleTypes == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.VehicleTypes'  is null.");
-            }
-            var vehicleType = await _context.VehicleTypes.FindAsync(id);
-            if (vehicleType != null)
-            {
-                _context.VehicleTypes.Remove(vehicleType);
-            }
+            //var vehicleType = await _context.VehicleTypes.FindAsync(id);
+            //if (vehicleType != null)
+            //{
+            //    _context.VehicleTypes.Remove(vehicleType);
+            //}
             
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
+            await _vehicleTypeService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool VehicleTypeExists(int id)
         {
-          return (_context.VehicleTypes?.Any(e => e.Id == id)).GetValueOrDefault();
+          return _vehicleTypeService.VehicleTypeExists(id);
         }
     }
 }
